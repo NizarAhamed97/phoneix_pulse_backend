@@ -12,11 +12,11 @@ export class StaffQueries {
     }
   
     insertStaffQuery(): string {
-      return 'INSERT INTO Staff (Name, DOB, ContactNo, Email, Role) VALUES (?, ?, ?, ?, ?)';
+      return 'INSERT INTO Staff (Name, DOB, Mobile, Email, Role) VALUES (?, ?, ?, ?, ?)';
     }
   
     updateStaffQuery(): string {
-      return 'UPDATE Staff SET Name = ?, DOB = ?, ContactNo = ?, Email = ?, Role = ? WHERE ID = ?';
+      return 'UPDATE Staff SET Name = ?, DOB = ?, Mobile = ?, Email = ?, Role = ? WHERE ID = ?';
     }
   
     deleteStaffQuery(): string {

@@ -16,12 +16,12 @@ export class MemberQueries {
   
     // Function to insert a new member
     public insertMemberQuery(): string {
-      return 'INSERT INTO Members (Name, DOB, ContactNo, Email, AddedBy) VALUES (?, ?, ?, ?, ?)';
+      return 'INSERT INTO Members (Name, DOB, Mobile, Email, AddedBy) VALUES (?, ?, ?, ?, ?)';
     }
   
     // Function to update a member
     public updateMemberQuery(): string {
-      return 'UPDATE Members SET Name = ?, DOB = ?, ContactNo = ?, Email = ?, AddedBy = ? WHERE ID = ?';
+      return 'UPDATE Members SET Name = ?, DOB = ?, Mobile = ?, Email = ?, AddedBy = ? WHERE ID = ?';
     }
   
     // Function to delete a member

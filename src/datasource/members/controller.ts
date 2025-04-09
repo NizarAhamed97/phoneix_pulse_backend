@@ -51,8 +51,8 @@ export class MemberController {
 
   // Function to create a new member
   public createMember(req: Request, res: Response) {
-    const { Name, DOB, ContactNo, Email, AddedBy } = req.body;
-    connection.query(this.queries.insertMemberQuery(), [Name, DOB, ContactNo, Email, AddedBy], (error, results) => {
+    const { Name, DOB, Mobile, Email, AddedBy } = req.body;
+    connection.query(this.queries.insertMemberQuery(), [Name, DOB, Mobile, Email, AddedBy], (error, results) => {
       if (error) {
         return res.status(500).json({ error });
       }

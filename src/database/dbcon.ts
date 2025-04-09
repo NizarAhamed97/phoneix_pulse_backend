@@ -6,7 +6,7 @@ const connection = mysql.createConnection({
   user: 'root', // Replace with your MySQL username
   password: '', // Replace with your MySQL password
   database: 'phoenix_pulse', // Replace with your database name
-  port : 3806
+  port : 3306
 });
 
 // Connect to the MySQL database

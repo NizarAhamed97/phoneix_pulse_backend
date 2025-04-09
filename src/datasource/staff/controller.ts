@@ -46,10 +46,10 @@ export class StaffController {
   }
 
   public createStaff(req: Request, res: Response) {
-    const { Name, DOB, ContactNo, Email, Role } = req.body;
+    const { Name, DOB, Mobile, Email, Role } = req.body;
     connection.query(
       this.queries.insertStaffQuery(),
-      [Name, DOB, ContactNo, Email, Role],
+      [Name, DOB, Mobile, Email, Role],
       (error, results) => {
         if (error) {
           return res.status(500).json({ error });
