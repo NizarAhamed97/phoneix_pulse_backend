@@ -3,7 +3,7 @@ import bodyParser from 'body-parser';
 import mainRouter from './datasource'; // Import the main datasource router
 
 const app = express();
-const PORT = 3000; // Define your port
+const PORT = 5000; // Define your port
 const cors = require('cors');
 
 const corsOptions = {
