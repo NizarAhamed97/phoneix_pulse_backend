@@ -1,26 +1,26 @@
 export class StaffQueries {
     getAllStaffQuery(): string {
-      return 'SELECT * FROM Staff';
+      return 'SELECT * FROM staff';
     }
   
     getStaffByIdQuery(): string {
-      return 'SELECT * FROM Staff WHERE ID = ?';
+      return 'SELECT * FROM staff WHERE ID = ?';
     }
   
     getStaffByNameQuery(): string {
-      return 'SELECT * FROM Staff WHERE Name LIKE ?';
+      return 'SELECT * FROM staff WHERE Name LIKE ?';
     }
   
     insertStaffQuery(): string {
-      return 'INSERT INTO Staff (Name, DOB, Mobile, Email, Role) VALUES (?, ?, ?, ?, ?)';
+      return 'INSERT INTO staff (Name, DOB, Mobile, Email, Role) VALUES (?, ?, ?, ?, ?)';
     }
   
     updateStaffQuery(): string {
-      return 'UPDATE Staff SET Name = ?, DOB = ?, Mobile = ?, Email = ?, Role = ? WHERE ID = ?';
+      return 'UPDATE staff SET Name = ?, DOB = ?, Mobile = ?, Email = ?, Role = ? WHERE ID = ?';
     }
   
     deleteStaffQuery(): string {
-      return 'DELETE FROM Staff WHERE ID = ?';
+      return 'DELETE FROM staff WHERE ID = ?';
     }
   }
   
