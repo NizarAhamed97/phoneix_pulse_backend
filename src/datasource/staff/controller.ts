@@ -14,9 +14,22 @@ export class StaffController {
       if (error) {
         return res.status(500).json({ error });
       }
-      res.json(results);
+  
+      const staff = results as { [key: string]: any }[];
+  
+      const formattedResults = staff.map((member) => {
+        if (member.DOB) {
+          const date = new Date(member.DOB);
+          const formattedDOB = date.toLocaleDateString("en-GB"); // DD/MM/YYYY
+          return { ...member, DOB: formattedDOB };
+        }
+        return member;
+      });
+  
+      res.json(formattedResults);
     });
   }
+  
 
   public getStaffById(req: Request, res: Response) {
     const { id } = req.params;

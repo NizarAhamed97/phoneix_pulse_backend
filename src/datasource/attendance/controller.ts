@@ -29,26 +29,36 @@ export class AttendanceController {
   
     // First, check if member is already checked in
     const checkQuery = `
-      SELECT * FROM attendance 
-      WHERE FK_MemberID = ? AND CheckOut IS NULL AND DATE(CheckIn) = CURDATE()
+      SELECT ID,CheckOut FROM attendance 
+      WHERE FK_MemberID = ? AND DATE(CheckIn) = CURDATE()
     `;
     connection.query(checkQuery, [FK_MemberID], (err, results) => {
       if (err) return res.status(500).json({ error: err });
-  
-      if ((results as any).length > 0) {
+    
+      const rows = results as { ID: number; CheckOut: string | null }[];
+      console.log(rows)
+      if (rows.length > 0) {
+        const checkOut = rows[0].CheckOut;  
+        console.log(checkOut)  
+        if(checkOut != null){
+          return res.status(403).json({ message: 'Member already checked in and checked out for the day' });
+        }
         // Already checked in, so check out
         connection.query(this.queries.updateCheckoutQuery(), [FK_MemberID], (error) => {
-          if (error) return res.status(500).json({ error });
-          return res.json({ message: 'Member was already checked in, so now checked out' });
+          if (error) {
+            return res.status(500).json({ error });
+          }
+          return res.status(200).json({ message: 'Member checked out' });
         });
       } else {
         // Not checked in, so insert new record
         connection.query(this.queries.insertAttendanceQuery(), [FK_MemberID], (error) => {
           if (error) return res.status(500).json({ error });
-          return res.status(201).json({ message: 'Member checked in successfully' });
+          return res.status(201).json({ message: 'Member checked in' });
         });
       }
     });
+    
   }
 
   public checkOutMember(req: Request, res: Response) {

@@ -15,9 +15,23 @@ export class MemberController {
       if (error) {
         return res.status(500).json({ error });
       }
-      res.json(results);
+  
+      const members = results as { [key: string]: any }[];
+  
+      const formattedResults = members.map((member) => {
+        if (member.DOB) {
+          const date = new Date(member.DOB);
+          const formattedDOB = date.toLocaleDateString("en-GB"); // DD/MM/YYYY
+          return { ...member, DOB: formattedDOB };
+        }
+        return member;
+      });
+  
+      res.json(formattedResults);
     });
   }
+  
+  
 
   // Function to get a member by ID
   public getMemberById(req: Request, res: Response) {
