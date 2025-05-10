@@ -1,7 +1,7 @@
 export class MemberQueries {
     // Function to get all members
     public getAllMembersQuery(): string {
-      return 'SELECT * FROM members';
+      return 'SELECT ID, Name, ContactNo, PlanType, RenewalDate FROM members';
     }
   
     // Function to get a member by ID
@@ -16,12 +16,13 @@ export class MemberQueries {
   
     // Function to insert a new member
     public insertMemberQuery(): string {
-      return 'INSERT INTO members (Name, DOB, Mobile, Email, AddedBy) VALUES (?, ?, ?, ?, ?)';
+      return `INSERT INTO members ( Name, DOB, ContactNo, Email,PersonalTrainer,TrainerID, PlanType, PlanDurationMonths, 
+      PlanDurationYears,RenewalDate, AddedBy) VALUES (?, ?, ?, ?, ?,?,?,?,?,?,?)`;
     }
   
     // Function to update a member
     public updateMemberQuery(): string {
-      return 'UPDATE members SET Name = ?, DOB = ?, Mobile = ?, Email = ?, AddedBy = ? WHERE ID = ?';
+      return 'UPDATE members SET Name = ?, DOB = ?, ContactNo = ?, Email = ?, AddedBy = ? WHERE ID = ?';
     }
   
     // Function to delete a member

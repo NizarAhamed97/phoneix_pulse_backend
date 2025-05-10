@@ -10,6 +10,12 @@ export class StaffQueries {
     getStaffByNameQuery(): string {
       return 'SELECT * FROM staff WHERE Name LIKE ?';
     }
+
+    getTrainerStaffQuery(): string {
+      return `SELECT ST.ID, ST.Name FROM staff AS ST JOIN staff_role AS SR ON 
+      ST.FK_StaffRole = SR.ID WHERE SR.Role = 'absbx'`;
+
+    }
   
     insertStaffQuery(): string {
       return 'INSERT INTO staff (Name, DOB, Mobile, Email, Role) VALUES (?, ?, ?, ?, ?)';

@@ -1,12 +1,18 @@
 import { Request, Response } from 'express';
 import connection from '../../database/dbcon'; // Import the connection
 import { MemberQueries } from './mysql';
+import { MemberLogic } from './businesslogic';
+import { calculateEndDate } from '../../util/dateUtil';
+import { formatDateToDMY } from '../../util/dateUtil';
 
 export class MemberController {
   private queries: MemberQueries;
+  private logic : MemberLogic;
 
   constructor() {
     this.queries = new MemberQueries();
+    this.logic = new MemberLogic();
+
   }
 
   // Function to get all members
@@ -17,16 +23,7 @@ export class MemberController {
       }
   
       const members = results as { [key: string]: any }[];
-  
-      const formattedResults = members.map((member) => {
-        if (member.DOB) {
-          const date = new Date(member.DOB);
-          const formattedDOB = date.toLocaleDateString("en-GB"); // DD/MM/YYYY
-          return { ...member, DOB: formattedDOB };
-        }
-        return member;
-      });
-  
+      const formattedResults = this.logic.formatMembersDOB(members);
       res.json(formattedResults);
     });
   }
@@ -43,7 +40,9 @@ export class MemberController {
       if ((results as any).length === 0) {
         return res.status(404).json({ message: 'Member not found' });
       }
-      res.json((results as any)[0]);
+      const members = results as { [key: string]: any }[];
+      const formattedResults = this.logic.formatMembersDOB(members);
+      res.json((formattedResults as any)[0]);
     });
   }
 
@@ -65,8 +64,12 @@ export class MemberController {
 
   // Function to create a new member
   public createMember(req: Request, res: Response) {
-    const { Name, DOB, Mobile, Email, AddedBy } = req.body;
-    connection.query(this.queries.insertMemberQuery(), [Name, DOB, Mobile, Email, AddedBy], (error, results) => {
+    const { Name, DOB, ContactNo, Email,PersonalTrainer,TrainerID, PlanType, PlanDurationMonths, 
+      PlanDurationYears, AddedBy } = req.body;
+      
+      const RenewalDate = calculateEndDate(new Date(),parseInt(PlanDurationYears),parseInt(PlanDurationMonths));
+    connection.query(this.queries.insertMemberQuery(), [ Name, DOB, ContactNo, Email,PersonalTrainer,
+      TrainerID, PlanType, PlanDurationMonths, PlanDurationYears,RenewalDate, AddedBy], (error, results) => {
       if (error) {
         return res.status(500).json({ error });
       }

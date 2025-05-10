@@ -58,6 +58,16 @@ export class StaffController {
     });
   }
 
+  public getTrainerStaffs(req: Request, res: Response) { 
+    connection.query(this.queries.getTrainerStaffQuery(), (error, results) => {
+      if (error) {
+        return res.status(500).json({ error });
+      }
+      res.status(200).json(results);
+    });
+  }
+  
+
   public createStaff(req: Request, res: Response) {
     const { Name, DOB, Mobile, Email, Role } = req.body;
     connection.query(

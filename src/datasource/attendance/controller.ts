@@ -36,10 +36,8 @@ export class AttendanceController {
       if (err) return res.status(500).json({ error: err });
     
       const rows = results as { ID: number; CheckOut: string | null }[];
-      console.log(rows)
       if (rows.length > 0) {
         const checkOut = rows[0].CheckOut;  
-        console.log(checkOut)  
         if(checkOut != null){
           return res.status(403).json({ message: 'Member already checked in and checked out for the day' });
         }
