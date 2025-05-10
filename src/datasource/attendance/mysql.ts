@@ -2,7 +2,7 @@ export class AttendanceQueries {
   // Member Queries
   getPresentMembersQuery() {
     return `
-      SELECT members.ID, members.Name, members.Mobile, attendance.CheckIn, attendance.CheckOut 
+      SELECT members.ID, members.Name, members.ContactNo, attendance.CheckIn, attendance.CheckOut 
       FROM members 
       JOIN attendance ON members.ID = attendance.FK_MemberID 
       WHERE DATE(attendance.CheckIn) = CURDATE()
@@ -11,7 +11,7 @@ export class AttendanceQueries {
 
   getAbsentMembersQuery() {
     return `
-      SELECT ID, Name, Mobile 
+      SELECT ID, Name, ContactNo 
       FROM members 
       WHERE ID NOT IN (
         SELECT FK_MemberID 
@@ -36,7 +36,7 @@ export class AttendanceQueries {
   // Staff Queries
   getPresentStaffQuery() {
     return `
-      SELECT staff.ID, staff.Name, staff.Mobile 
+      SELECT staff.ID, staff.Name, staff.ContactNo 
       FROM staff 
       JOIN staff_attendance ON staff.ID = staff_attendance.FK_StaffID 
       WHERE DATE(staff_attendance.CheckIn) = CURDATE()
@@ -45,7 +45,7 @@ export class AttendanceQueries {
 
   getAbsentStaffQuery() {
     return `
-      SELECT ID, Name, Mobile 
+      SELECT ID, Name, ContactNo 
       FROM staff 
       WHERE ID NOT IN (
         SELECT FK_StaffID 
