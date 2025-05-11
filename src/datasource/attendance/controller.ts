@@ -49,12 +49,27 @@ export class AttendanceController {
           return res.status(200).json({ message: 'Member checked out' });
         });
       } else {
-        // Not checked in, so insert new record
+        // Insert attendance record first
         connection.query(this.queries.insertAttendanceQuery(), [FK_MemberID], (error) => {
-          if (error) return res.status(500).json({ error });
-          return res.status(201).json({ message: 'Member checked in' });
+          if (error) {
+            return res.status(500).json({ error });
+          }
+      
+          // Update the last check-in date after inserting attendance
+          const updateLastCheckInQuery = `
+            UPDATE members SET LastCheckIn = NOW() WHERE ID = ?
+          `;
+          connection.query(updateLastCheckInQuery, [FK_MemberID], (err2) => {
+            if (err2) {
+              return res.status(500).json({ error: err2 });
+            }
+      
+            // Send success response only after both queries are successful
+            return res.status(201).json({ message: 'Member checked in' });
+          });
         });
       }
+      
     });
     
   }
