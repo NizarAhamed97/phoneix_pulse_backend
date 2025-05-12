@@ -63,7 +63,7 @@ export class DashboardController {
       const overdue : any = [];
   
       (results as any).forEach((membership : any) => {
-        if (membership.Status === 'Coming Soon') {
+        if (membership.Status === 'Coming Soon' && membership.DaysToBeExpired <= 7) {
           expirySoon.push(membership);
         } else if (membership.Status === 'Expired') {
           overdue.push(membership);
@@ -71,12 +71,6 @@ export class DashboardController {
       });
   
       // Return the response in the desired format
-      console.log({
-        expirySoon,
-        overdue,
-      })
-
-
       res.json({
         expirySoon,
         overdue,
