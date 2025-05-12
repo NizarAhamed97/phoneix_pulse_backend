@@ -12,6 +12,7 @@ export class StaffController {
   public getAllStaff(req: Request, res: Response) {
     connection.query(this.queries.getAllStaffQuery(), (error, results) => {
       if (error) {
+        console.log(error)
         return res.status(500).json({ error });
       }
   
@@ -67,12 +68,20 @@ export class StaffController {
     });
   }
   
+  public getStaffRoles(req: Request, res: Response) { 
+    connection.query(this.queries.getStaffRolesQuery(), (error, results) => {
+      if (error) {
+        return res.status(500).json({ error });
+      }
+      res.status(200).json(results);
+    });
+  }
 
   public createStaff(req: Request, res: Response) {
-    const { Name, DOB, Mobile, Email, Role } = req.body;
+    const { Name, DOB, Mobile, Email, FK_StaffRole  } = req.body;
     connection.query(
       this.queries.insertStaffQuery(),
-      [Name, DOB, Mobile, Email, Role],
+      [Name, DOB, Mobile, Email, FK_StaffRole ],
       (error, results) => {
         if (error) {
           return res.status(500).json({ error });

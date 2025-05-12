@@ -10,6 +10,7 @@ const staffController = new StaffController();
 router.get('/', (req, res) => staffController.getAllStaff(req, res));
 //router.get('/:id', (req, res) => staffController.getStaffById(req, res));
 router.get('/trainers', (req, res) => staffController.getTrainerStaffs(req, res));
+router.get('/role', (req,res) => staffController.getStaffRoles(req,res))
 
 router.get('/name/:name', (req, res) => staffController.getStaffByName(req, res));
 router.post('/', (req, res) => staffController.createStaff(req, res));
