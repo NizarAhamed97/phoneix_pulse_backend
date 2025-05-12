@@ -2,10 +2,18 @@ export class AttendanceQueries {
   // Member Queries
   getPresentMembersQuery() {
     return `
-      SELECT members.ID, members.Name, members.ContactNo, attendance.CheckIn, attendance.CheckOut 
-      FROM members 
-      JOIN attendance ON members.ID = attendance.FK_MemberID 
-      WHERE DATE(attendance.CheckIn) = CURDATE()
+      SELECT 
+        members.ID, 
+        members.Name, 
+        members.ContactNo, 
+        TIME(attendance.CheckIn) AS CheckIn, 
+        TIME(attendance.CheckOut) AS CheckOut
+      FROM 
+        members 
+      JOIN 
+        attendance ON members.ID = attendance.FK_MemberID 
+      WHERE 
+        DATE(attendance.CheckIn) = CURDATE()
     `;
   }
 
