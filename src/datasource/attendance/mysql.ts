@@ -30,13 +30,13 @@ export class AttendanceQueries {
   }
 
   insertAttendanceQuery() {
-    return "INSERT INTO attendance (FK_MemberID, CheckIn) VALUES (?, NOW())";
+    return "INSERT INTO attendance (FK_MemberID, CheckIn) VALUES (?, CONVERT_TZ(NOW(), '+00:00', '+05:30'))";
   }
 
   updateCheckoutQuery() {
     return `
       UPDATE attendance 
-      SET CheckOut = NOW() 
+      SET CheckOut = CONVERT_TZ(NOW(), '+00:00', '+05:30') 
       WHERE FK_MemberID = ? AND CheckOut IS NULL AND DATE(CheckIn) = CURDATE()
     `;
   }
@@ -64,13 +64,13 @@ export class AttendanceQueries {
   }
 
   insertStaffAttendanceQuery() {
-    return "INSERT INTO staff_attendance (FK_StaffID, CheckIn) VALUES (?, NOW())";
+    return "INSERT INTO staff_attendance (FK_StaffID, CheckIn) VALUES (?, CONVERT_TZ(NOW(), '+00:00', '+05:30'))";
   }
 
   updateStaffCheckoutQuery() {
     return `
       UPDATE staff_attendance 
-      SET CheckOut = NOW() 
+      SET CheckOut = CONVERT_TZ(NOW(), '+00:00', '+05:30') 
       WHERE FK_StaffID = ? AND CheckOut IS NULL AND DATE(CheckIn) = CURDATE()
     `;
   }

@@ -57,7 +57,7 @@ export class AttendanceController {
       
           // Update the last check-in date after inserting attendance
           const updateLastCheckInQuery = `
-            UPDATE members SET LastCheckIn = NOW() WHERE ID = ?
+            UPDATE members SET LastCheckIn = CONVERT_TZ(NOW(), '+00:00', '+05:30') WHERE ID = ?
           `;
           connection.query(updateLastCheckInQuery, [FK_MemberID], (err2) => {
             if (err2) {
