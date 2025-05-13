@@ -42,6 +42,7 @@ export class MemberController {
       }
       const members = results as { [key: string]: any }[];
       const formattedResults = this.logic.formatMembersDOB(members);
+      console.log(formattedResults)
       res.json((formattedResults as any)[0]);
     });
   }
@@ -64,13 +65,15 @@ export class MemberController {
 
   // Function to create a new member
   public createMember(req: Request, res: Response) {
-    const { Name, DOB, ContactNo, Email,PersonalTrainer,TrainerID, PlanType, PlanDurationMonths, 
-      PlanDurationYears, AddedBy } = req.body;
+    const { Name, DOB, ContactNo, Email,PersonalTrainer,TrainerID, PlanName, PlanDurationMonths, 
+      PlanDurationYears, PlanAmount, AmountPaid, AddedBy } = req.body;
       
       const RenewalDate = calculateEndDate(new Date(),parseInt(PlanDurationYears),parseInt(PlanDurationMonths));
+      const Pending = parseInt(PlanAmount) - parseInt(AmountPaid)
     connection.query(this.queries.insertMemberQuery(), [ Name, DOB, ContactNo, Email,PersonalTrainer,
-      TrainerID, PlanType, PlanDurationMonths, PlanDurationYears,RenewalDate, AddedBy], (error, results) => {
+      TrainerID, PlanName, PlanDurationMonths, PlanDurationYears,RenewalDate, PlanAmount, AmountPaid, Pending, AddedBy], (error, results) => {
       if (error) {
+        console.log(error)
         return res.status(500).json({ error });
       }
       res.status(201).json({ message: 'Member added successfully', memberId: (results as any).insertId });
