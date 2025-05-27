@@ -17,6 +17,10 @@ app.use(cors(corsOptions));
 app.use(bodyParser.json()); // Parse JSON bodies
 
 // Use the main router which connects all submodules
+app.get('/health', (req, res) => {
+  res.status(200).send('OK');
+});
+
 app.use('/api', mainRouter);
 
 app.listen(PORT, () => {
