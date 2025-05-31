@@ -18,7 +18,6 @@ export class AuthController {
 
     connection.query(this.queries.getAdminByUsernameQuery(), [username], async (error, results : any) => {
       if (error) {
-        console.log(error)
         return res.status(500).json({ error });
       }
       console.log(results)

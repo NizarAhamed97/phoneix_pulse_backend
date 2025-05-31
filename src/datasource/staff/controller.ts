@@ -12,7 +12,6 @@ export class StaffController {
   public getAllStaff(req: Request, res: Response) {
     connection.query(this.queries.getAllStaffQuery(), (error, results) => {
       if (error) {
-        console.log(error)
         return res.status(500).json({ error });
       }
   

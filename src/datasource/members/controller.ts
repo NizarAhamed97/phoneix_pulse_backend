@@ -42,7 +42,6 @@ export class MemberController {
       }
       const members = results as { [key: string]: any }[];
       const formattedResults = this.logic.formatMembersDOB(members);
-      console.log(formattedResults)
       res.json((formattedResults as any)[0]);
     });
   }

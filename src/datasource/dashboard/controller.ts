@@ -42,6 +42,7 @@ export class DashboardController {
       // Sort descending: most recent check-in (fewest days ago) first
       activeMembers.sort((a, b) => a.LastCheckIn - b.LastCheckIn);
       inactiveMembers.sort((a, b) => a.LastCheckIn - b.LastCheckIn);
+ 
       res.json({
         activeMembers,
         inactiveMembers,
