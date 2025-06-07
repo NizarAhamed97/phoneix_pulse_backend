@@ -82,14 +82,122 @@ export class MemberController {
   // Function to update a member
   public updateMember(req: Request, res: Response) {
     const { id } = req.params;
-    const { Name, DOB, ContactNo, Email, AddedBy } = req.body;
-    connection.query(this.queries.updateMemberQuery(), [Name, DOB, ContactNo, Email, AddedBy, id], (error, results) => {
+  
+    const allowedFields = [
+      "Name",
+      "DOB",
+      "ContactNo",
+      "Email",
+      "PersonalTrainer",
+      "TrainerID",
+    ];
+  
+    const fieldsToUpdate: string[] = [];
+    const values: any[] = [];
+  
+    allowedFields.forEach((field) => {
+      if (req.body[field] !== undefined) {
+        fieldsToUpdate.push(`${field} = ?`);
+        values.push(req.body[field]);
+      }
+    });
+  
+    if (fieldsToUpdate.length === 0) {
+      return res.status(400).json({ message: "No valid fields provided for update." });
+    }
+  
+    values.push(id); // for WHERE ID = ?
+  
+    connection.query(this.queries.updateMemberQuery(fieldsToUpdate), values, (error, results) => {
       if (error) {
         return res.status(500).json({ error });
       }
-      res.json({ message: 'Member updated successfully' });
+      res.json({ message: "Member updated successfully" });
     });
   }
+  
+
+  public renewMembership(req: Request, res: Response) {
+    const { id } = req.params;
+    const { PlanName, PlanAmount, PlanDurationYears, PlanDurationMonths, AmountPaid } = req.body;
+  
+    const durationYears = parseInt(PlanDurationYears);
+    const durationMonths = parseInt(PlanDurationMonths);
+    const paid = parseInt(AmountPaid);
+    const amount = parseInt(PlanAmount);
+    console.log(paid,amount)
+  
+    if (!PlanName || isNaN(durationYears) || isNaN(durationMonths) || isNaN(amount)) {
+      return res.status(400).json({ message: "Missing or invalid fields." });
+    }
+  
+    // Step 1: Fetch current RenewalDate and Pending
+    connection.query(
+      this.queries.getMembershipByID(),
+      [id],
+      (err, results : any) => {
+        if (err || results.length === 0) {
+          return res.status(500).json({ error: err || "Member not found" });
+        }
+  
+        const { RenewalDate: currentRenewalDateStr, Pending: existingPending } = results[0];
+  
+        // Step 2: Calculate base date
+        const currentDate = new Date(currentRenewalDateStr);
+        const day = String(currentDate.getDate()).padStart(2, "0");
+        const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+        const year = currentDate.getFullYear();
+        const currentRenewalDate = new Date(`${year}-${month}-${day}`);
+        const today = new Date();
+        const baseDate = currentRenewalDate > today ? currentRenewalDate : today;
+  
+        // Step 3: Calculate new RenewalDate
+        const formattedRenewalDate = calculateEndDate(baseDate,durationYears,durationMonths)
+  
+        // Step 4: Calculate new pending
+        const difference = amount - paid;
+        let newPending = parseInt(existingPending) + difference;
+        console.log(newPending)
+        newPending = newPending < 0 ? 0 : newPending;
+  
+        // Step 5: Update member
+        const values = [PlanName, durationYears, durationMonths, amount, paid, newPending, formattedRenewalDate, id];
+  
+        connection.query(this.queries.updateMembershipByID(), values, (err2, result) => {
+          if (err2) {
+            console.log(err2)
+            return res.status(500).json({ error: err2 });
+          }
+          res.json({ message: "Membership renewed successfully" });
+        });
+      }
+    );
+  }
+
+  public updatePending(req: Request, res: Response) {
+    const { id } = req.params;
+    const { Pending } = req.body;
+  
+    if (Pending === undefined || isNaN(Pending)) {
+      return res.status(400).json({ message: "Invalid or missing pending amount." });
+    }
+  
+    connection.query(this.queries.updatePending(), [Pending, id], (error, results) => {
+      if (error) {
+        console.error("DB Error:", error);
+        return res.status(500).json({ error: "Failed to update pending amount." });
+      }
+  
+      if ((results as any).affectedRows === 0) {
+        return res.status(404).json({ message: "Member not found." });
+      }
+  
+      res.json({ message: "Pending amount updated successfully." });
+    });
+  }
+  
+  
+  
 
   // Function to delete a member
   public deleteMember(req: Request, res: Response) {

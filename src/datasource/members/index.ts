@@ -12,6 +12,8 @@ router.get('/:id', (req, res) => memberController.getMemberById(req, res));
 router.get('/name/:name', (req, res) => memberController.getMemberByName(req, res))
 router.post('/', (req, res) => memberController.createMember(req, res));
 router.put('/:id', (req, res) => memberController.updateMember(req, res));
+router.put('/:id/renew', (req, res) => memberController.renewMembership(req, res));
+router.put('/:id/updatePending', (req, res) => memberController.updatePending(req, res));
 router.delete('/:id', (req, res) => memberController.deleteMember(req, res));
 
 export default router;

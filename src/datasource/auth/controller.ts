@@ -14,9 +14,10 @@ export class AuthController {
   }
 
   public login = (req: Request, res: Response) => {
-    const { username, password } = req.body;
+    const { mobile, password } = req.body;
 
-    connection.query(this.queries.getAdminByUsernameQuery(), [username], async (error, results : any) => {
+    console.log(mobile)
+    connection.query(this.queries.getAdminByUsernameQuery(), [mobile], async (error, results : any) => {
       if (error) {
         return res.status(500).json({ error });
       }
@@ -31,9 +32,49 @@ export class AuthController {
         return res.status(401).json({ message: 'Invalid username or password' });
       }
 
-      const token = jwt.sign({ id: user.ID, username: user.Username }, JWT_SECRET, { expiresIn: '1d' });
+      const token = jwt.sign({ id: user.ID, username: user.Username, gymName : user.GymName }, JWT_SECRET, { expiresIn: '1d' });
 
       res.json({ token });
     });
   };
+
+  public signup = async (req: Request, res: Response) => {
+    const { mobile, password, country, gymName} = req.body;
+  
+    if (!mobile || !password || !country) {
+      return res.status(400).json({ message: 'Missing required fields' });
+    }
+  
+    try {
+      // Check if user already exists
+      connection.query(this.queries.getAdminByUsernameQuery(), [mobile], async (error: any, results: any) => {
+        if (error) {
+          return res.status(500).json({ message: 'Database error', error });
+        }
+  
+        if (results.length > 0) {
+          return res.status(409).json({ message: 'Mobile number already registered' });
+        }
+  
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+  
+        // Insert the new user
+        connection.query(
+          this.queries.insertAdminQuery(),
+          [mobile, hashedPassword, country, gymName],
+          (err: any, insertResult: any) => {
+            if (err) {
+              return res.status(500).json({ message: 'Insert failed', error: err });
+            }
+  
+            res.status(201).json({ message: 'Signup successful' });
+          }
+        );
+      });
+    } catch (err) {
+      res.status(500).json({ message: 'Unexpected error', error: err });
+    }
+  };
+  
 }

@@ -8,8 +8,9 @@ export class MemberLogic{
             updatedMember.DOB = formatDateToDMY(updatedMember.DOB);
           }
     
-          if (updatedMember.PlanExpiry) {
-            updatedMember.PlanExpiry = formatDateToDMY(updatedMember.PlanExpiry);
+          if (updatedMember.RenewalDate) {
+            console.log(updatedMember.RenewalDate)
+            updatedMember.RenewalDate = formatDateToDMY(updatedMember.RenewalDate);
           }
 
           if (updatedMember.LastCheckIn) {
